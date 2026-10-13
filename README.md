@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Troll-Toll Logo" width="320" />
+  <img src="https://raw.githubusercontent.com/BeardyMike/Troll-Toll/main/assets/logo.png" alt="Troll-Toll Logo" width="320" />
 </p>
 
 # Troll-Toll
 
-[![Version](https://img.shields.io/badge/version-0.20.3-blue.svg)](https://github.com/BeardyMike/Troll-Toll)
+[![Version](https://img.shields.io/badge/version-0.20.4-blue.svg)](https://github.com/BeardyMike/Troll-Toll)
 [![Target](https://img.shields.io/badge/Valheim-Ashlands%20Compatible-green.svg)](https://valheim.com)
 [![Framework](https://img.shields.io/badge/BepInEx-5.4.22+-orange.svg)](https://github.com/BepInEx/BepInEx)
 

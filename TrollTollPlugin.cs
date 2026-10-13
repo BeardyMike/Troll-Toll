@@ -9,7 +9,7 @@ namespace TrollToll
     {
         public const string PluginGUID = "com.beardymike.trolltoll";
         public const string PluginName = "Troll-Toll";
-        public const string PluginVersion = "0.20.3";
+        public const string PluginVersion = "0.20.4";
         public const string PluginAuthor = "BeardyMike";
 
         // Section 1 - General

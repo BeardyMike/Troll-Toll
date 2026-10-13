@@ -1,6 +1,6 @@
 {
   "name": "Troll_Toll",
-  "version_number": "0.20.3",
+  "version_number": "0.20.4",
   "website_url": "https://github.com/BeardyMike/Troll-Toll",
   "description": "Turns off stamina drain out of combat, with granular biome, creature, and boss relief progression controls.",
   "dependencies": [
