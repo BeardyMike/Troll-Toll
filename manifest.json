@@ -1,0 +1,9 @@
+{
+  "name": "Troll_Toll",
+  "version_number": "0.20.3",
+  "website_url": "https://github.com/BeardyMike/Troll-Toll",
+  "description": "Turns off stamina drain out of combat, with granular biome, creature, and boss relief progression controls.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2202"
+  ]
+}

@@ -1,0 +1,9 @@
+bin/
+obj/
+build/
+Environment.props
+*.user
+*.suo
+.vs/
+.idea/
+.vscode/

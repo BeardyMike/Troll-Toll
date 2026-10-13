@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copy this file to "Environment.props" (which is ignored by git)
+  if your Valheim or BepInEx installation paths differ from the standard defaults.
+-->
+<Project>
+  <PropertyGroup>
+    <!-- Path to your Valheim game folder containing valheim.exe and valheim_Data -->
+    <!-- <ValheimPath>C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimPath> -->
+
+    <!-- Path to the BepInEx core folder containing 0Harmony.dll and BepInEx.dll -->
+    <!-- <BepInExCorePath>C:\Program Files (x86)\Steam\steamapps\common\Valheim\BepInEx\core</BepInExCorePath> -->
+
+    <!-- Optional: Target folder where the built DLL will be deployed after build -->
+    <!-- <DeployPluginPath>C:\Program Files (x86)\Steam\steamapps\common\Valheim\BepInEx\plugins\TrollToll</DeployPluginPath> -->
+  </PropertyGroup>
+</Project>

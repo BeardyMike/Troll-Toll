@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>TrollToll</AssemblyName>
+    <RootNamespace>TrollToll</RootNamespace>
+    <Version>0.20.3</Version>
+    <AssemblyVersion>0.20.3</AssemblyVersion>
+    <FileVersion>0.20.3</FileVersion>
+    <Authors>BeardyMike</Authors>
+    <Product>Troll-Toll</Product>
+    <Description>Stamina mod for Valheim that turns off stamina drain when no enemies are nearby, with granular biome, creature, and boss relief progression control.</Description>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+  </PropertyGroup>
+
+  <!-- Optional local user path overrides (ignored by git). Copy Environment.props.example to Environment.props -->
+  <Import Project="Environment.props" Condition="Exists('Environment.props')" />
+
+  <PropertyGroup>
+    <!-- 1. Valheim installation directory detection -->
+    <ValheimPath Condition="'$(ValheimPath)' == '' and '$(VALHEIM_INSTALL_DIR)' != ''">$(VALHEIM_INSTALL_DIR)</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and '$(VALHEIM_PATH)' != ''">$(VALHEIM_PATH)</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('C:\Program Files (x86)\Steam\steamapps\common\Valheim')">C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('C:\Program Files\Steam\steamapps\common\Valheim')">C:\Program Files\Steam\steamapps\common\Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('D:\SteamLibrary\steamapps\common\Valheim')">D:\SteamLibrary\steamapps\common\Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('D:\Steam\steamapps\common\Valheim')">D:\Steam\steamapps\common\Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == '' and Exists('E:\SteamLibrary\steamapps\common\Valheim')">E:\SteamLibrary\steamapps\common\Valheim</ValheimPath>
+    <ValheimPath Condition="'$(ValheimPath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimPath>
+
+    <!-- 2. BepInEx Core directory detection (checks manual install, r2modman profile, and Thunderstore profile across any user profile) -->
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == '' and Exists('$(ValheimPath)\BepInEx\core')">$(ValheimPath)\BepInEx\core</BepInExCorePath>
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == '' and Exists('$(APPDATA)\r2modmanPlus-local\Valheim\profiles\Default\BepInEx\core')">$(APPDATA)\r2modmanPlus-local\Valheim\profiles\Default\BepInEx\core</BepInExCorePath>
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == '' and Exists('$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx\core')">$(APPDATA)\Thunderstore Mod Manager\DataFolder\Valheim\profiles\Default\BepInEx\core</BepInExCorePath>
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == ''">$(APPDATA)\r2modmanPlus-local\Valheim\profiles\Default\BepInEx\core</BepInExCorePath>
+
+    <!-- 3. Deployment paths -->
+    <LocalBuildFolder>$(MSBuildProjectDirectory)\build</LocalBuildFolder>
+    <DeployPluginPath Condition="'$(DeployPluginPath)' == '' and '$(R2ModmanPluginPath)' != ''">$(R2ModmanPluginPath)</DeployPluginPath>
+    <DeployPluginPath Condition="'$(DeployPluginPath)' == '' and Exists('$(APPDATA)\r2modmanPlus-local\Valheim\profiles\Default\BepInEx\plugins')">$(APPDATA)\r2modmanPlus-local\Valheim\profiles\Default\BepInEx\plugins\TrollToll</DeployPluginPath>
+    <DeployPluginPath Condition="'$(DeployPluginPath)' == '' and Exists('$(ValheimPath)\BepInEx\plugins')">$(ValheimPath)\BepInEx\plugins\TrollToll</DeployPluginPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Valheim Game Assemblies -->
+    <Reference Include="assembly_valheim">
+      <HintPath>$(ValheimPath)\valheim_Data\Managed\assembly_valheim.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="assembly_utils">
+      <HintPath>$(ValheimPath)\valheim_Data\Managed\assembly_utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ValheimPath)\valheim_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ValheimPath)\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(ValheimPath)\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+
+    <!-- BepInEx / Harmony -->
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExCorePath)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCorePath)\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Post-Build copy to local build folder and optional mod manager plugins folder -->
+  <Target Name="PostBuildDeploy" AfterTargets="Build">
+    <!-- Local build folder -->
+    <MakeDir Directories="$(LocalBuildFolder)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(LocalBuildFolder)" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\assets\icon.png" DestinationFolder="$(LocalBuildFolder)" Condition="Exists('$(MSBuildProjectDirectory)\assets\icon.png')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\README.md" DestinationFolder="$(LocalBuildFolder)" Condition="Exists('$(MSBuildProjectDirectory)\README.md')" />
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\manifest.json" DestinationFolder="$(LocalBuildFolder)" Condition="Exists('$(MSBuildProjectDirectory)\manifest.json')" />
+    <Message Importance="High" Text="Copied plugin DLL and package files to $(LocalBuildFolder)" />
+
+    <!-- Optional live mod folder (only if destination parent folder exists) -->
+    <MakeDir Directories="$(DeployPluginPath)" Condition="'$(DeployPluginPath)' != '' and Exists('$(DeployPluginPath)\..')" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DeployPluginPath)" Condition="'$(DeployPluginPath)' != '' and Exists('$(DeployPluginPath)\..')" />
+    <Message Importance="High" Text="Copied plugin DLL to $(DeployPluginPath)" Condition="'$(DeployPluginPath)' != '' and Exists('$(DeployPluginPath)\..')" />
+  </Target>
+
+</Project>
